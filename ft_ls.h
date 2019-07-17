@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/16 12:31:02 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/17 12:59:03 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft/libft.h"
 # include <dirent.h>
+# include <errno.h>
 # include <stdio.h>
 
 typedef struct		s_options
@@ -24,10 +25,12 @@ typedef struct		s_options
 	int				flag_l;
 	int				flag_lr;
 	int				flag_ur;
+	int				flag_ini;
 }					t_options;
 
-char	**ft_readdir(char **array);
+char	**ft_readdir(char **array, char	*location);
 void	ft_sort(char **array, int size);
 int		ft_count_array(char **array);
+void	ft_print_line(char **array, t_options flag_on, char **location);
 
 #endif
