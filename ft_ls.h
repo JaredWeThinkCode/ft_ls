@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/18 09:04:43 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/19 16:13:21 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <errno.h>
 # include <sys/stat.h>
 # include <time.h>
+# include <pwd.h>
+# include <sys/xattr.h>
+# include <grp.h>
+# include <uuid/uuid.h>
 # include <stdio.h>
 
 typedef struct		s_options
