@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/19 16:13:21 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/20 12:31:25 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <sys/xattr.h>
 # include <grp.h>
 # include <uuid/uuid.h>
-# include <stdio.h>
 
 typedef struct		s_options
 {
@@ -34,6 +33,7 @@ typedef struct		s_options
 	int				flag_ini;
 }					t_options;
 
+int		ft_printf(const char *str, ...);
 char	**ft_readdir(char **array, char	*location, t_options flag_on);
 void	ft_sort(char **array, int size);
 int		ft_count_array(char **array);

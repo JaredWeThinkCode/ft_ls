@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:02:19 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/19 17:34:45 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/20 12:32:18 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ void	ft_sort(char **array, int size)
 void	ft_check_errno(char *location)
 {
 	if (errno == 20)
-		printf("%s\n", location);
+		ft_printf("%s\n", location);
 	if (errno == 2)
-		printf("ft_ls: %s: No such file or directory\n", location);
+		ft_printf("ft_ls: %s: No such file or directory\n", location);
 	exit(3);
 }
 
@@ -131,7 +131,7 @@ void	printarray(char **array)
 	a = 0;
 	while (array[a] != NULL)
 	{
-		printf("%s\n--", array[a]);
+		ft_printf("%s\n--", array[a]);
 		a++;
 	}
 }
@@ -180,17 +180,25 @@ void	ft_flag_l_pm(char *string)
 	gp = getgrgid(filestat.st_gid);
 	time = ctime(&filestat.st_mtime);
 	time = ft_strsub(time, 4, 12);
-	printf( (S_ISDIR(filestat.st_mode)) ? "d" : "-");
-	printf( (filestat.st_mode & S_IRUSR) ? "r" : "-");
-	printf( (filestat.st_mode & S_IWUSR) ? "w" : "-");
-	printf( (filestat.st_mode & S_IXUSR) ? "x" : "-");
-	printf( (filestat.st_mode & S_IRGRP) ? "r" : "-");
-	printf( (filestat.st_mode & S_IWGRP) ? "w" : "-");
-	printf( (filestat.st_mode & S_IXGRP) ? "x" : "-");
-	printf( (filestat.st_mode & S_IROTH) ? "r" : "-");
-	printf( (filestat.st_mode & S_IWOTH) ? "w" : "-");
-	printf( (filestat.st_mode & S_IXOTH) ? "x" : "-");
-	printf("  %2i %s  %s%7i %s ", (int)filestat.st_nlink, pw->pw_name, gp->gr_name, (int)filestat.st_size, time);
+	if (S_ISLNK(filestat.st_mode))
+		ft_printf("l");
+	else if (S_ISDIR(filestat.st_mode))
+		ft_printf("d");
+	else
+		ft_printf("-");
+	ft_printf( (filestat.st_mode & S_IRUSR) ? "r" : "-");
+	ft_printf( (filestat.st_mode & S_IWUSR) ? "w" : "-");
+	ft_printf( (filestat.st_mode & S_IXUSR) ? "x" : "-");
+	ft_printf( (filestat.st_mode & S_IRGRP) ? "r" : "-");
+	ft_printf( (filestat.st_mode & S_IWGRP) ? "w" : "-");
+	ft_printf( (filestat.st_mode & S_IXGRP) ? "x" : "-");
+	ft_printf( (filestat.st_mode & S_IROTH) ? "r" : "-");
+	ft_printf( (filestat.st_mode & S_IWOTH) ? "w" : "-");
+	ft_printf( (filestat.st_mode & S_IXOTH) ? "x" : "-");
+	if (pw != 0)
+		ft_printf("  %i %s  %s%i %s ", (int)filestat.st_nlink, pw->pw_name, gp->gr_name, (int)filestat.st_size, time);
+	else
+		ft_printf("  %i s  s%i %s ", (int)filestat.st_nlink, /*pw->pw_name, gp->gr_name, */(int)filestat.st_size, time);
 }
 
 void	ft_print_l(char **array, char *location, t_options flag_on)
@@ -201,7 +209,7 @@ void	ft_print_l(char **array, char *location, t_options flag_on)
 
 	a = ft_count_array(array) - 1;
 	b = ft_cal_block(array, flag_on);
-	printf("total %i\n", b);
+	ft_printf("total %i\n", b);
 	while (a >= 0)
 	{
 		if (flag_on.flag_a != 1)
@@ -211,7 +219,7 @@ void	ft_print_l(char **array, char *location, t_options flag_on)
 		string = ft_strdup(array[a]);
 		string = ft_strjoin(location, string);
 		ft_flag_l_pm(string);
-		printf("%s\n", array[a]);
+		ft_printf("%s\n", array[a]);
 		a--;
 	}
 }
@@ -225,11 +233,11 @@ void	ft_flag_l(char **array, char *location, t_options flag_on)
 	a = 0;
 	string = malloc(sizeof(char *) * 1024);
 	if (flag_on.flag_t == 3)
-		array = ft_flag_t(array, location); 
+		array = ft_flag_t(array, location);
 	if (flag_on.flag_lr != 2)
 	{
 		b = ft_cal_block(array, flag_on);
-		printf("total %i\n", b);
+		ft_printf("total %i\n", b);
 		while (array[a] != NULL)
 		{
 			if (flag_on.flag_a != 1)
@@ -239,7 +247,7 @@ void	ft_flag_l(char **array, char *location, t_options flag_on)
 			string = ft_strdup(array[a]);
 			string = ft_strjoin(location, string);
 			ft_flag_l_pm(string);
-			printf("%s\n", array[a]);
+			ft_printf("%s\n", array[a]);
 			a++;
 		}
 	}
@@ -281,7 +289,7 @@ void	ft_flag_a(char **array, int a)
 	{
 		while (array[a] != NULL)
 		{
-			printf("%s\n", array[a]);
+			ft_printf("%s\n", array[a]);
 			a++;
 		}
 	}
@@ -289,7 +297,7 @@ void	ft_flag_a(char **array, int a)
 	{
 		while (array[a] != NULL)
 		{
-			printf("%s\n", array[a]);
+			ft_printf("%s\n", array[a]);
 			a--;
 		}
 	}
@@ -308,7 +316,7 @@ void	ft_flag_lr(char **array, t_options flag_on)
 		{
 			if (array[a][0] == '.')
 				break ;
-			printf("%s\n", array[a]);
+			ft_printf("%s\n", array[a]);
 			a--;
 		}
 	}
@@ -324,7 +332,7 @@ void	ft_flag_t_print(char **array, t_options flag_on)
 		a = ft_count_array(array) - 1;
 		if (flag_on.flag_a != 1)
 			while (a >= 0)
-				(array[a][0] != '.') ? printf("%s\n", array[a--]) : a--;
+				(array[a][0] != '.') ? ft_printf("%s\n", array[a--]) : a--;
 		if (flag_on.flag_a == 1)
 			ft_flag_lr(array, flag_on);
 	}
@@ -334,7 +342,7 @@ void	ft_flag_t_print(char **array, t_options flag_on)
 	{
 		while (array[a] != NULL)
 		{
-			(array[a][0] == '.') ? a++ : printf("%s\n", array[a++]);
+			(array[a][0] == '.') ? a++ : ft_printf("%s\n", array[a++]);
 		}
 	}
 }
@@ -361,12 +369,12 @@ void	ft_print_line(char **array, t_options flag_on, char **location)
 	a = 0;
 	b = ft_count_array(location);
 	if (b > 1)
-		printf("\n%s:\n", location[c++]);
+		ft_printf("\n%s:\n", location[c++]);
 	while (array[a] != NULL && flag_on.flag_ini == 0 && array[3] != NULL)
 	{
 		while (array[a][0] == '.')
 			a++;
-		printf("%s\n", array[a]);
+		ft_printf("%s\n", array[a]);
 		a++;
 	}
 	if (array[a] != NULL && flag_on.flag_ini == 1)
