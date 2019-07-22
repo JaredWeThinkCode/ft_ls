@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/20 12:31:25 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/22 15:47:37 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct		s_options
 }					t_options;
 
 int		ft_printf(const char *str, ...);
-char	**ft_readdir(char **array, char	*location, t_options flag_on);
+char	**ft_readdir(char **array, char	*location);
 void	ft_sort(char **array, int size);
 int		ft_count_array(char **array);
 void	ft_print_line(char **array, t_options flag_on, char **location);

@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:02:19 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/20 12:32:18 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/22 15:57:05 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	**ft_flag_t(char **array, char *location)
 		string = ft_strdup(array[a]);
 		string = ft_strjoin(location, string);
 		stat(string, &filestat);
-		b = (int)filestat.st_mtime;
+		b = filestat.st_mtime;
 		temp[a] = ft_itoa(b);
 		temp[a] = ft_strjoin(temp[a], array[a]);
 		a++;
@@ -123,19 +123,6 @@ char	**ft_flag_t(char **array, char *location)
 	return (temp);
 }
 
-//Test Function
-void	printarray(char **array)
-{
-	int		a;
-
-	a = 0;
-	while (array[a] != NULL)
-	{
-		ft_printf("%s\n--", array[a]);
-		a++;
-	}
-}
-
 int		ft_cal_block(char **array, t_options flag_on)
 {
 	int				a;
@@ -144,27 +131,35 @@ int		ft_cal_block(char **array, t_options flag_on)
 
 	a = 0;
 	b = 0;
-	if (flag_on.flag_a == 1)
+	while (array[a] != NULL)
 	{
-		while (array[a] != NULL)
-		{
-			stat(array[a], &filestat);
-			b = b + (int)filestat.st_blocks;
-			a++;
-		}
-	}
-	else
-	{
-		while (array[a] != NULL)
-		{
+		if (flag_on.flag_a != 1)
 			while (array[a][0] == '.')
 				a++;
-			stat(array[a], &filestat);
-			b = b + (int)filestat.st_blocks;
-			a++;
-		}
+		lstat(array[a], &filestat);
+		b += filestat.st_blocks;
+		a++;
 	}
 	return (b);
+}
+
+void	ft_print_modes(struct stat filestat)
+{
+	if (S_ISLNK(filestat.st_mode))
+		ft_printf("l");
+	else if (S_ISDIR(filestat.st_mode))
+		ft_printf("d");
+	else
+		ft_printf("-");
+	ft_printf((filestat.st_mode & S_IRUSR) ? "r" : "-");
+	ft_printf((filestat.st_mode & S_IWUSR) ? "w" : "-");
+	ft_printf((filestat.st_mode & S_IXUSR) ? "x" : "-");
+	ft_printf((filestat.st_mode & S_IRGRP) ? "r" : "-");
+	ft_printf((filestat.st_mode & S_IWGRP) ? "w" : "-");
+	ft_printf((filestat.st_mode & S_IXGRP) ? "x" : "-");
+	ft_printf((filestat.st_mode & S_IROTH) ? "r" : "-");
+	ft_printf((filestat.st_mode & S_IWOTH) ? "w" : "-");
+	ft_printf((filestat.st_mode & S_IXOTH) ? "x" : "-");
 }
 
 void	ft_flag_l_pm(char *string)
@@ -174,88 +169,97 @@ void	ft_flag_l_pm(char *string)
 	struct group	*gp;
 	char			*time;
 
-	
-	stat(string, &filestat);
+	lstat(string, &filestat);
 	pw = getpwuid(filestat.st_uid);
 	gp = getgrgid(filestat.st_gid);
 	time = ctime(&filestat.st_mtime);
 	time = ft_strsub(time, 4, 12);
-	if (S_ISLNK(filestat.st_mode))
-		ft_printf("l");
-	else if (S_ISDIR(filestat.st_mode))
-		ft_printf("d");
-	else
-		ft_printf("-");
-	ft_printf( (filestat.st_mode & S_IRUSR) ? "r" : "-");
-	ft_printf( (filestat.st_mode & S_IWUSR) ? "w" : "-");
-	ft_printf( (filestat.st_mode & S_IXUSR) ? "x" : "-");
-	ft_printf( (filestat.st_mode & S_IRGRP) ? "r" : "-");
-	ft_printf( (filestat.st_mode & S_IWGRP) ? "w" : "-");
-	ft_printf( (filestat.st_mode & S_IXGRP) ? "x" : "-");
-	ft_printf( (filestat.st_mode & S_IROTH) ? "r" : "-");
-	ft_printf( (filestat.st_mode & S_IWOTH) ? "w" : "-");
-	ft_printf( (filestat.st_mode & S_IXOTH) ? "x" : "-");
+	ft_print_modes(filestat);
 	if (pw != 0)
-		ft_printf("  %i %s  %s%i %s ", (int)filestat.st_nlink, pw->pw_name, gp->gr_name, (int)filestat.st_size, time);
+	{
+		ft_printf("  %3i %s  %s", (int)filestat.st_nlink, pw->pw_name, gp->gr_name);
+		ft_printf("%7i %s ", (int)filestat.st_size, time);
+	}
 	else
-		ft_printf("  %i s  s%i %s ", (int)filestat.st_nlink, /*pw->pw_name, gp->gr_name, */(int)filestat.st_size, time);
+	{
+		ft_printf("  %3i %i  %i", (int)filestat.st_nlink, filestat.st_uid, filestat.st_gid);
+		ft_printf("%8i %s ", (int)filestat.st_size, time);
+	}
+}
+
+void	ft_print_stats(char *array, char *location)
+{
+	char			*string;
+	char			*path;
+	struct stat		filestat;
+
+	string = malloc(sizeof(char *) * 1024);
+	path = ft_strnew(1);
+	location = ft_strjoin(location, "/");
+	string = ft_strdup(array);
+	string = ft_strjoin(location, string);
+	ft_flag_l_pm(string);
+	lstat(string, &filestat);
+	if (S_ISLNK(filestat.st_mode))
+	{
+		readlink(string, path, 32);
+		ft_printf("%s -> %s\n", array, path);
+	}
+	else
+		ft_printf("%s\n", array);
 }
 
 void	ft_print_l(char **array, char *location, t_options flag_on)
 {
-	char	*string;
 	int		a;
-	int		b;
 
 	a = ft_count_array(array) - 1;
-	b = ft_cal_block(array, flag_on);
-	ft_printf("total %i\n", b);
 	while (a >= 0)
 	{
-		if (flag_on.flag_a != 1)
+		if (flag_on.flag_a != 1 && flag_on.flag_t != 3)
 			if (array[a][0] == '.')
 				break ;
-		location = ft_strjoin(location, "/");
-		string = ft_strdup(array[a]);
-		string = ft_strjoin(location, string);
-		ft_flag_l_pm(string);
-		ft_printf("%s\n", array[a]);
+		if (flag_on.flag_a != 1 && flag_on.flag_t == 3)
+		{
+			while (array[a][0] == '.')
+				a--;
+			if (a < 0)
+				break ;
+		}
+		ft_print_stats(array[a], location);
 		a--;
 	}
 }
 
-void	ft_flag_l(char **array, char *location, t_options flag_on)
+void	ft_flag_l(char **array, char **location, t_options flag_on)
 {
-	char		*string;
 	int			a;
-	int			b;
+	static int	b;
+	int			c;
 
 	a = 0;
-	string = malloc(sizeof(char *) * 1024);
+	c = ft_count_array(array) - 1;
 	if (flag_on.flag_t == 3)
-		array = ft_flag_t(array, location);
+		array = ft_flag_t(array, location[b]);
 	if (flag_on.flag_lr != 2)
 	{
-		b = ft_cal_block(array, flag_on);
-		ft_printf("total %i\n", b);
 		while (array[a] != NULL)
 		{
+			if (a >= c && flag_on.flag_t == 3)
+				break ;
 			if (flag_on.flag_a != 1)
 				while (array[a][0] == '.')
 					a++;
-			location = ft_strjoin(location, "/");
-			string = ft_strdup(array[a]);
-			string = ft_strjoin(location, string);
-			ft_flag_l_pm(string);
-			ft_printf("%s\n", array[a]);
+			ft_print_stats(array[a], location[b]);
 			a++;
 		}
 	}
 	if (flag_on.flag_lr == 2)
-		ft_print_l(array, location, flag_on);
+		ft_print_l(array, location[b], flag_on);
+	b++;
 }
 
-char	**ft_readdir(char **array, char *location, t_options flag_on)
+char	**ft_readdir(char **array, char *location)
 {
 	struct dirent	*file;
 	DIR				*loc;
@@ -276,10 +280,6 @@ char	**ft_readdir(char **array, char *location, t_options flag_on)
 	closedir(loc);
 	array[a] = NULL;
 	ft_sort(array, ft_count_array(array));
-	if (flag_on.flag_t == 3 && flag_on.flag_l != 4)
-		array = ft_flag_t(array, location);
-	if (flag_on.flag_l == 5)
-		ft_flag_l(array, location, flag_on);
 	return (array);
 }
 
@@ -341,14 +341,14 @@ void	ft_flag_t_print(char **array, t_options flag_on)
 	else
 	{
 		while (array[a] != NULL)
-		{
 			(array[a][0] == '.') ? a++ : ft_printf("%s\n", array[a++]);
-		}
 	}
 }
 
-void	ft_flag_print(char **array, t_options flag_on)
+void	ft_flag_print(char **array, char **location, t_options flag_on)
 {
+	if (flag_on.flag_l == 5)
+		ft_flag_l(array, location, flag_on);
 	if (flag_on.flag_t != 3)
 	{
 		if (flag_on.flag_lr == 2 && flag_on.flag_l != 5)
@@ -368,8 +368,15 @@ void	ft_print_line(char **array, t_options flag_on, char **location)
 
 	a = 0;
 	b = ft_count_array(location);
-	if (b > 1)
+	if (b > 1 && flag_on.flag_l != 5)
 		ft_printf("\n%s:\n", location[c++]);
+	if (b >= 1 && flag_on.flag_l == 5)
+	{
+		if (b > 1)
+			ft_printf("\n%s:\n", location[c++]);
+		b = ft_cal_block(array, flag_on);
+		ft_printf("total %i\n", b);
+	}
 	while (array[a] != NULL && flag_on.flag_ini == 0 && array[3] != NULL)
 	{
 		while (array[a][0] == '.')
@@ -378,19 +385,19 @@ void	ft_print_line(char **array, t_options flag_on, char **location)
 		a++;
 	}
 	if (array[a] != NULL && flag_on.flag_ini == 1)
-		ft_flag_print(array, flag_on);
+		ft_flag_print(array, location, flag_on);
 }
 
 void	ft_ini(char **array, char **location, t_options flag_on, int a)
 {
 	if (location == NULL)
 	{
-		array = ft_readdir(array, ".", flag_on);
+		array = ft_readdir(array, ".");
 		ft_print_line(array, flag_on, NULL);
 	}
 	else
 	{
-		array = ft_readdir(array, location[a], flag_on);
+		array = ft_readdir(array, location[a]);
 		ft_print_line(array, flag_on, location);
 	}
 }
@@ -409,7 +416,7 @@ void	ft_check_flags(char **array, char *flags, char **location, t_options flag_o
 		if (ft_strchr(flags, 't'))
 			flag_on.flag_t = 3;
 		if (ft_strchr(flags, 'l'))
-			flag_on.flag_l = 5; 
+			flag_on.flag_l = 5;
 		flag_on.flag_ini = 1;
 	}
 	while (location[a] != NULL)
