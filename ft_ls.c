@@ -6,11 +6,13 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:02:19 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/22 15:57:05 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/23 15:24:21 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+void	ft_ini(char **array, char **location, t_options flag_on, int a);
 
 int		ft_count_array(char **array)
 {
@@ -239,8 +241,8 @@ void	ft_flag_l(char **array, char **location, t_options flag_on)
 
 	a = 0;
 	c = ft_count_array(array) - 1;
-	if (flag_on.flag_t == 3)
-		array = ft_flag_t(array, location[b]);
+	//if (flag_on.flag_t == 3)
+	//	array = ft_flag_t(array, location[b]);
 	if (flag_on.flag_lr != 2)
 	{
 		while (array[a] != NULL)
@@ -345,8 +347,106 @@ void	ft_flag_t_print(char **array, t_options flag_on)
 	}
 }
 
+void	ft_print_array(char **array)
+{
+	int		a;
+
+	a = 0;
+	while (array[a] != NULL)
+	{
+		ft_printf("%s\n", array[a]);
+		a++;
+	}
+}
+
+char	**ft_arraydup(char **array)
+{
+	char	**temp;
+	int		a;
+
+	temp = (char **)malloc(sizeof(char *) * 1024);
+	a = 0;
+	while (array[a] != NULL)
+	{
+		temp[a] = ft_strdup(array[a]);
+		a++;
+	}
+	temp[a] = NULL;
+	return (temp);
+}
+
+char	**ft_rec_loc(char *string, char **location, int	a)
+{
+	char	**temp;
+	int		b;
+
+	b = a + 1;
+	temp = ft_arraydup(location);
+	temp[a] = ft_strdup(string);
+	while (location[a] != NULL)
+	{
+		temp[b] = ft_strdup(location[a]);
+		b++;
+		a++;
+	}
+	temp[b] = NULL;
+	return (temp);
+}
+
+char	**ft_flag_ur(char **array, char **location, t_options flag_on)
+{
+	struct stat filestat;
+	char		*string;
+	int			a;
+	int			b;
+
+	a = 0;
+	b = 0;
+	while (location[a] != NULL)
+	{
+		array = ft_readdir(array, location[a]);
+		location[a] = ft_strjoin(location[a], "/");
+		while (array[b] != NULL)
+		{
+			if (flag_on.flag_a != 1)
+				while (array[b][0] == '.')
+					b++;
+			string = ft_strdup(array[b]);
+			if (!(ft_strcmp(string, ".") == 0 || ft_strcmp(string, "..") == 0))
+			{
+				string = ft_strjoin(location[a], string);
+				lstat(string, &filestat);
+				if (S_ISDIR(filestat.st_mode))
+					location = ft_rec_loc(string, location, a + 1);
+			}
+			b++;
+		}
+		a++;
+	}
+	return (location);
+}
+
+void	ft_print_ini(char **array, t_options flag_on)
+{
+	int		a;
+
+	a = 0;
+	if (array[2] == NULL && flag_on.flag_a != 1)
+		return ;
+	while (array[a] != NULL)
+	{
+		while (array[a][0] == '.')
+			a++;
+		ft_printf("%s\n", array[a]);
+		a++;
+	}
+}
+
+
 void	ft_flag_print(char **array, char **location, t_options flag_on)
 {
+	if (flag_on.flag_ur == 6 && flag_on.flag_a != 1 && flag_on.flag_lr != 2 && flag_on.flag_t != 3 && flag_on.flag_l != 5)
+		ft_print_ini(array, flag_on);
 	if (flag_on.flag_l == 5)
 		ft_flag_l(array, location, flag_on);
 	if (flag_on.flag_t != 3)
@@ -374,16 +474,13 @@ void	ft_print_line(char **array, t_options flag_on, char **location)
 	{
 		if (b > 1)
 			ft_printf("\n%s:\n", location[c++]);
+		if (array[2] == NULL && flag_on.flag_a != 1)
+			return ;
 		b = ft_cal_block(array, flag_on);
 		ft_printf("total %i\n", b);
 	}
-	while (array[a] != NULL && flag_on.flag_ini == 0 && array[3] != NULL)
-	{
-		while (array[a][0] == '.')
-			a++;
-		ft_printf("%s\n", array[a]);
-		a++;
-	}
+	if (array[a] != NULL && flag_on.flag_ini == 0 && array[2] != NULL)
+		ft_print_ini(array, flag_on);
 	if (array[a] != NULL && flag_on.flag_ini == 1)
 		ft_flag_print(array, location, flag_on);
 }
@@ -398,6 +495,8 @@ void	ft_ini(char **array, char **location, t_options flag_on, int a)
 	else
 	{
 		array = ft_readdir(array, location[a]);
+		if (flag_on.flag_t == 3)
+			array = ft_flag_t(array, location[a]);
 		ft_print_line(array, flag_on, location);
 	}
 }
@@ -417,14 +516,17 @@ void	ft_check_flags(char **array, char *flags, char **location, t_options flag_o
 			flag_on.flag_t = 3;
 		if (ft_strchr(flags, 'l'))
 			flag_on.flag_l = 5;
+		if (ft_strchr(flags, 'R'))
+			flag_on.flag_ur = 6;
 		flag_on.flag_ini = 1;
 	}
+	if (flag_on.flag_ur == 6)
+		location = ft_flag_ur(array, location, flag_on);
 	while (location[a] != NULL)
 	{
 		ft_ini(array, location, flag_on, a);
 		a++;
 	}
-	exit(3);
 }
 
 char	**ft_find_dir(char **av)
@@ -470,6 +572,7 @@ void	ft_flag_ini(t_options flag_on)
 	flag_on.flag_lr = 0;
 	flag_on.flag_t = 0;
 	flag_on.flag_l = 0;
+	flag_on.flag_ur = 0;
 }
 
 int		main(int ac, char **av)
@@ -492,10 +595,13 @@ int		main(int ac, char **av)
 		location = ft_find_dir(av);
 		if (flags[0] == '-')
 			ft_check_flags(array, flags, location, flag_on);
-		while (location[a] != NULL)
+		else
 		{
-			ft_ini(array, location, flag_on, a);
-			a++;
+			while (location[a] != NULL)
+			{
+				ft_ini(array, location, flag_on, a);
+				a++;
+			}
 		}
 	}
 	return (0);
