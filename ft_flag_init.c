@@ -1,16 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_flag_init.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/31 11:46:59 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/07/31 12:38:02 by jnaidoo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
+
+void	ft_print_array(char **array)
+{
+	int		a = 0;
+	while (array[a] != NULL)
+	{
+		ft_printf("%s\n", array[a]);
+		a++;
+	}
+}
 
 void    ft_flag_print(char **array, char **location, t_options flag_on)
 {
-    if (flag_on.flag_ur == 6 && flag_on.flag_a != 1 && flag_on.flag_lr != 2 && flag_on.flag_t != 3 && flag_on.flag_l != 5)
+    if (flag_on.flag_ur == 1 && flag_on.flag_a != 1 && flag_on.flag_lr != 1 && flag_on.flag_t != 1 && flag_on.flag_l != 1)
 		ft_print_ini(array);
-	if (flag_on.flag_l == 5)
+	if (flag_on.flag_l == 1)
 		ft_flag_l(array, location, flag_on);
-	if (flag_on.flag_lr == 2 && flag_on.flag_l != 5 && flag_on.flag_t != 3)
+	if (flag_on.flag_lr == 1 && flag_on.flag_l != 1 && flag_on.flag_t != 1)
 		ft_flag_lr(array, flag_on);
-	if (flag_on.flag_a == 1 && flag_on.flag_lr != 2 && flag_on.flag_l != 5 && flag_on.flag_t != 3)
+	if (flag_on.flag_a == 1 && flag_on.flag_lr != 1 && flag_on.flag_l != 1 && flag_on.flag_t != 1)
 		ft_flag_a(array, 0);
-	if (flag_on.flag_t == 3 && flag_on.flag_l != 5)
+	if (flag_on.flag_t == 1 && flag_on.flag_l != 1)
 		ft_flag_t_print(array, flag_on);
 }
 
@@ -40,10 +62,26 @@ void    ft_ini(char **array, char **location, t_options flag_on, int a)
 	else
 	{
 		array = ft_readdir(array, location[a]);
-		if (flag_on.flag_t == 3)
+		if (flag_on.flag_t == 1)
 			array = ft_flag_t(array, location[a]);
 		ft_print_line(array, flag_on, location);
 	}
+}
+
+t_options	ft_flag_ini(t_options flag_on, char *flags)
+{
+	if (ft_strchr(flags, 'a'))
+		flag_on.flag_a = 1;
+	if (ft_strchr(flags, 'r'))
+		flag_on.flag_lr = 1;
+	if (ft_strchr(flags, 't'))
+		flag_on.flag_t = 1;
+	if (ft_strchr(flags, 'l'))
+		flag_on.flag_l = 1;
+	if (ft_strchr(flags, 'R'))
+		flag_on.flag_ur = 1;
+	flag_on.flag_ini = 1;
+	return (flag_on);
 }
 
 void	ft_check_flags(char **array, char *flags, char **location, t_options flag_on)
@@ -52,20 +90,8 @@ void	ft_check_flags(char **array, char *flags, char **location, t_options flag_o
 
 	a = 0;
 	if (flags[0] == '-')
-	{
-		if (ft_strchr(flags, 'a'))
-			flag_on.flag_a = 1;
-		if (ft_strchr(flags, 'r'))
-			flag_on.flag_lr = 2;
-		if (ft_strchr(flags, 't'))
-			flag_on.flag_t = 3;
-		if (ft_strchr(flags, 'l'))
-			flag_on.flag_l = 5;
-		if (ft_strchr(flags, 'R'))
-			flag_on.flag_ur = 6;
-		flag_on.flag_ini = 1;
-	}
-	if (flag_on.flag_ur == 6)
+		flag_on = ft_flag_ini(flag_on, flags);
+	if (flag_on.flag_ur == 1)
 		location = ft_flag_ur(array, location, flag_on);
 	while (location[a] != NULL)
 		ft_ini(array, location, flag_on, a++);

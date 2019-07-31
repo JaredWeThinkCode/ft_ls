@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_flag_l.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/31 11:48:42 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/07/31 11:53:44 by jnaidoo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 int     ft_cal_block(char **array, char *location, t_options flag_on)
@@ -94,10 +106,10 @@ void	ft_print_l(char **array, char *location, t_options flag_on)
 	a = ft_count_array(array) - 1;
 	while (a >= 0)
 	{
-		if (flag_on.flag_a != 1 && flag_on.flag_t != 3)
+		if (flag_on.flag_a != 1 && flag_on.flag_t != 1)
 			if (array[a][0] == '.')
 				break ;
-		if (flag_on.flag_a != 1 && flag_on.flag_t == 3)
+		if (flag_on.flag_a != 1 && flag_on.flag_t == 1)
 			while (array[a][0] == '.')
 				a--;
 		if (a < 0)
@@ -123,11 +135,11 @@ void	ft_flag_l(char **array, char **location, t_options flag_on)
 	c = ft_count_array(array) - 1;
 	d = ft_cal_block(array, location[b], flag_on);
 	ft_printf("total %i\n", d);
-	if (flag_on.flag_lr != 2)
+	if (flag_on.flag_lr != 1)
 	{
 		while (array[a] != NULL)
 		{
-			if (a >= c && flag_on.flag_t == 3)
+			if (a >= c && flag_on.flag_t == 1)
 				break ;
 			if (flag_on.flag_a != 1)
 				while (array[a][0] == '.')
@@ -136,7 +148,7 @@ void	ft_flag_l(char **array, char **location, t_options flag_on)
 			a++;
 		}
 	}
-	if (flag_on.flag_lr == 2)
+	if (flag_on.flag_lr == 1)
 		ft_print_l(array, location[b], flag_on);
 	b++;
 }

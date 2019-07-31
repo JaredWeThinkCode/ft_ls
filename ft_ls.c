@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:02:19 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/24 15:47:57 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/31 11:37:33 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	**ft_readdir(char **array, char *location)
 	return (array);
 }
 
-t_options   ft_flag_ini(t_options flag_on)
+t_options   ft_flag(t_options flag_on)
 {
     flag_on.flag_a = 0;
     flag_on.flag_lr = 0;
@@ -65,7 +65,8 @@ int		main(int ac, char **av)
 	t_options	flag_on;
 
 	array = (char **)malloc(sizeof(char *) * 1024);
-	flag_on = ft_flag_ini(flag_on);
+	flag_on.flag_ini = 0;
+	flag_on = ft_flag(flag_on);
 	a = 0;
 	if (ac == 1)
 		ft_ini(array, NULL, flag_on, 0);

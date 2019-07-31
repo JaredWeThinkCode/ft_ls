@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/22 15:47:37 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/07/31 11:41:18 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	ft_print_ini(char **array);
 void	ft_check_errno(char *location);
 void	ft_sort(char **array, int size);
 
-t_options   ft_flag_ini(t_options flag_on);
+t_options   ft_flag(t_options flag_on);
+t_options   ft_flag_ini(t_options flag_on, char *flags);
 
 #endif

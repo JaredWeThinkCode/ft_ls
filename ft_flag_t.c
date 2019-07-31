@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_flag_t.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/31 11:54:29 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/07/31 12:21:14 by jnaidoo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 char    **ft_rev_array(char **array)
@@ -18,13 +30,17 @@ char    **ft_rev_array(char **array)
 char    **ft_remove_num(char **array)
 {
 	int		a;
+	int		b;
 	char	**temp;
 
 	a = 0;
 	temp = (char **)malloc(sizeof(char *) * 1024);
 	while (array[a] != NULL)
     {
-        temp[a] = ft_strdup(array[a] + 19);
+		b = 0;
+		while (array[a][b] >= '0' && array[a][b] <= '9')
+			b++;
+        temp[a] = ft_strdup(array[a] + b);
         a++;
     }
 	temp[a] = NULL;
@@ -51,7 +67,7 @@ char	**ft_flag_t(char **array, char *location)
 		lstat(string, &filestat);
 		b = filestat.st_mtime;
 		temp[a] = ft_itoa(b);
-		b = filestat.st_mtim.tv_nsec;
+		b = filestat.st_mtimespec.tv_nsec;
 		temp[a] = ft_strjoin(temp[a], ft_itoa(b));
 		temp[a] = ft_strjoin(temp[a], array[a]);
 		a++;
@@ -67,7 +83,7 @@ void	ft_flag_t_print(char **array, t_options flag_on)
 	int		a;
 
 	a = 0;
-	if (flag_on.flag_lr == 2)
+	if (flag_on.flag_lr == 1)
 	{
 		a = ft_count_array(array) - 1;
 		if (flag_on.flag_a != 1)
