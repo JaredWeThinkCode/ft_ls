@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/31 11:41:18 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/01 16:14:58 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft/libft.h"
 # include <dirent.h>
 # include <errno.h>
+# include <stdio.h>
 # include <sys/stat.h>
 # include <time.h>
 # include <pwd.h>

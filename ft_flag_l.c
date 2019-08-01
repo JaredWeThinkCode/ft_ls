@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 11:48:42 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/31 11:53:44 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/01 09:43:58 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void	ft_flag_l(char **array, char **location, t_options flag_on)
 	{
 		while (array[a] != NULL)
 		{
-			if (a >= c && flag_on.flag_t == 1)
+			if (a > c && flag_on.flag_t == 1)
 				break ;
 			if (flag_on.flag_a != 1)
 				while (array[a][0] == '.')

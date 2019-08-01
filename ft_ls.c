@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:02:19 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/31 11:37:33 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/01 16:17:05 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	ft_check_errno(char *location)
 	    ft_printf("%s\n", location);
 	if (errno == 2)
 		ft_printf("ft_ls: %s: No such file or directory\n", location);
+	if (errno == 13)
+		ft_printf("ft_ls: %s: Permission denied\n", location);
 	exit(3);
 }
 
