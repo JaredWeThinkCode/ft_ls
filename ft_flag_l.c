@@ -6,13 +6,13 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 11:48:42 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/01 09:43:58 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/02 11:47:24 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-int     ft_cal_block(char **array, char *location, t_options flag_on)
+int		ft_cal_block(char **array, char *location, t_options flag_on)
 {
 	int				a;
 	int				b;
@@ -23,12 +23,14 @@ int     ft_cal_block(char **array, char *location, t_options flag_on)
 	location = ft_strjoin(location, "/");
 	while (array[a] != NULL)
 	{
-		if (flag_on.flag_a != 1)
-			while (array[a][0] == '.')
-				a++;
-		lstat(ft_strjoin(location, array[a]), &filestat);
-		b += filestat.st_blocks;
-		a++;
+		if (flag_on.flag_a != 1 && array[a][0] == '.')
+			a++;
+		else
+		{
+			lstat(ft_strjoin(location, array[a]), &filestat);
+			b += filestat.st_blocks;
+			a++;
+		}
 	}
 	return (b);
 }
@@ -67,13 +69,17 @@ void	ft_flag_l_pm(char *string)
 	ft_print_modes(filestat);
 	if (pw != 0)
 	{
-		ft_printf("  %3i %s  %s", (int)filestat.st_nlink, pw->pw_name, gp->gr_name);
+		ft_printf("  %3i ", (int)filestat.st_nlink);
+		ft_printf("%-8s  ", pw->pw_name);
+		ft_printf("%-7s", gp->gr_name);
 		ft_printf("%7i %s ", (int)filestat.st_size, time);
 	}
 	else
 	{
-		ft_printf("  %3i %i  %i", (int)filestat.st_nlink, filestat.st_uid, filestat.st_gid);
-		ft_printf("%8i %s ", (int)filestat.st_size, time);
+		ft_printf("  %3i ", (int)filestat.st_nlink);
+		ft_printf("%-8i  ", filestat.st_uid);
+		ft_printf("%-7i", filestat.st_gid);
+		ft_printf("%7i %s ", (int)filestat.st_size, time);
 	}
 }
 
@@ -109,13 +115,13 @@ void	ft_print_l(char **array, char *location, t_options flag_on)
 		if (flag_on.flag_a != 1 && flag_on.flag_t != 1)
 			if (array[a][0] == '.')
 				break ;
-		if (flag_on.flag_a != 1 && flag_on.flag_t == 1)
-			while (array[a][0] == '.')
-				a--;
-		if (a < 0)
-            break ;
-		ft_print_stats(array[a], location);
-		a--;
+		if ((flag_on.flag_a != 1 && flag_on.flag_t == 1) && (array[a][0] == '.'))
+			a--;
+		else
+		{
+			ft_print_stats(array[a], location);
+			a--;
+		}
 	}
 }
 
@@ -139,13 +145,13 @@ void	ft_flag_l(char **array, char **location, t_options flag_on)
 	{
 		while (array[a] != NULL)
 		{
-			if (a > c && flag_on.flag_t == 1)
-				break ;
-			if (flag_on.flag_a != 1)
-				while (array[a][0] == '.')
-					a++;
-			ft_print_stats(array[a], location[b]);
-			a++;
+			if (flag_on.flag_a != 1 && array[a][0] == '.')
+				a++;
+			else
+			{
+				ft_print_stats(array[a], location[b]);
+				a++;
+			}
 		}
 	}
 	if (flag_on.flag_lr == 1)

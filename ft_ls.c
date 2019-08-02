@@ -6,16 +6,16 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 09:02:19 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/01 16:17:05 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/02 13:39:19 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	ft_check_errno(char *location)
+void			ft_check_errno(char *location)
 {
-    if (errno == 20)
-	    ft_printf("%s\n", location);
+	if (errno == 20)
+		ft_printf("%s\n", location);
 	if (errno == 2)
 		ft_printf("ft_ls: %s: No such file or directory\n", location);
 	if (errno == 13)
@@ -23,7 +23,7 @@ void	ft_check_errno(char *location)
 	exit(3);
 }
 
-char	**ft_readdir(char **array, char *location)
+char			**ft_readdir(char **array, char *location)
 {
 	struct dirent	*file;
 	DIR				*loc;
@@ -35,8 +35,12 @@ char	**ft_readdir(char **array, char *location)
 	location = ft_strjoin(location, "/");
 	loc = opendir(location);
 	if (loc == NULL)
+	{
 		ft_check_errno(location);
-	while ((file = readdir(loc)) != NULL)
+		//array[a] = NULL;
+		return (array);
+	}
+	while (loc != NULL && (file = readdir(loc)) != NULL)
 	{
 		array[a] = ft_strdup(file->d_name);
 		a++;
@@ -47,18 +51,18 @@ char	**ft_readdir(char **array, char *location)
 	return (array);
 }
 
-t_options   ft_flag(t_options flag_on)
+t_options		ft_flag(t_options flag_on)
 {
-    flag_on.flag_a = 0;
-    flag_on.flag_lr = 0;
-    flag_on.flag_t = 0;
-    flag_on.flag_l = 0;
-    flag_on.flag_ur = 0;
-    flag_on.flag_ini = 0;
-    return (flag_on);
+	flag_on.flag_a = 0;
+	flag_on.flag_lr = 0;
+	flag_on.flag_t = 0;
+	flag_on.flag_l = 0;
+	flag_on.flag_ur = 0;
+	flag_on.flag_ini = 0;
+	return (flag_on);
 }
 
-int		main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	char		**array;
 	char		**location;

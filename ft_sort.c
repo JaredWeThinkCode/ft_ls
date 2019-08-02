@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sort.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/08/02 11:49:35 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/08/02 11:49:59 by jnaidoo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-int     ft_count_array(char **array)
+int		ft_count_array(char **array)
 {
 	int		a;
 
-	if (array == NULL)
-		return (0);
 	a = 0;
+	if (array == NULL)
+		return (a);
 	while (array[a] != NULL)
 		a++;
 	return (a);

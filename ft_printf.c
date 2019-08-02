@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/21 11:55:43 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/22 08:30:17 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/02 11:45:43 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_format(char *a, int c, va_list va)
 	}
 }
 
-void	ft_print_space(int	num)
+void	ft_print_space(int num)
 {
 	int		a;
 

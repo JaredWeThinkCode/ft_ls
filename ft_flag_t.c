@@ -6,13 +6,13 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 11:54:29 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/31 12:21:14 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/02 11:44:55 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char    **ft_rev_array(char **array)
+char	**ft_rev_array(char **array)
 {
 	int		a;
 	int		b;
@@ -27,7 +27,7 @@ char    **ft_rev_array(char **array)
 	return (temp);
 }
 
-char    **ft_remove_num(char **array)
+char	**ft_remove_num(char **array)
 {
 	int		a;
 	int		b;
@@ -36,13 +36,13 @@ char    **ft_remove_num(char **array)
 	a = 0;
 	temp = (char **)malloc(sizeof(char *) * 1024);
 	while (array[a] != NULL)
-    {
+	{
 		b = 0;
 		while (array[a][b] >= '0' && array[a][b] <= '9')
 			b++;
-        temp[a] = ft_strdup(array[a] + b);
-        a++;
-    }
+		temp[a] = ft_strdup(array[a] + b);
+		a++;
+	}
 	temp[a] = NULL;
 	return (temp);
 }

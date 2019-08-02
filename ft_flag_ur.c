@@ -6,22 +6,22 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 12:21:23 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/31 14:46:58 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/02 13:38:31 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void    ft_print_ini(char **array)
+void	ft_print_ini(char **array)
 {
-    int     a;
+	int		a;
 
-    a = 0;
-    if (array[2] == NULL)
-        return ;
-    else
-        while (array[a] != NULL)
-            (array[a][0] != '.') ? ft_printf("%s\n", array[a++]) : a++;
+	a = 0;
+	if (array[2] == NULL)
+		return ;
+	else
+		while (array[a] != NULL)
+			(array[a][0] != '.') ? ft_printf("%s\n", array[a++]) : a++;
 }
 
 char	**ft_arraydup(char **array)
@@ -50,16 +50,6 @@ char	**ft_rec_loc(char *string, char **location)
 	return (location);
 }
 
-void	ft_array_one(char **loc)
-{
-	int		a = 0;
-	while (loc[a] != NULL)
-	{
-		ft_printf("%s\n", loc[a]);
-		a++;
-	}
-}
-
 char	**ft_flag_ur(char **array, char **location, t_options flag_on)
 {
 	struct stat filestat;
@@ -68,7 +58,7 @@ char	**ft_flag_ur(char **array, char **location, t_options flag_on)
 	int			b;
 
 	a = 0;
-	while (location[a] != NULL && a < 2)
+	while (location[a] != NULL)// && a < 2)
 	{
 		b = 0;
 		array = ft_readdir(array, location[a]);

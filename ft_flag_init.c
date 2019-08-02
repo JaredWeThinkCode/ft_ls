@@ -6,25 +6,15 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 11:46:59 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/07/31 12:38:02 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/02 13:31:04 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	ft_print_array(char **array)
+void			ft_flag_print(char **array, char **location, t_options flag_on)
 {
-	int		a = 0;
-	while (array[a] != NULL)
-	{
-		ft_printf("%s\n", array[a]);
-		a++;
-	}
-}
-
-void    ft_flag_print(char **array, char **location, t_options flag_on)
-{
-    if (flag_on.flag_ur == 1 && flag_on.flag_a != 1 && flag_on.flag_lr != 1 && flag_on.flag_t != 1 && flag_on.flag_l != 1)
+	if (flag_on.flag_ur == 1 && flag_on.flag_a != 1 && flag_on.flag_lr != 1 && flag_on.flag_t != 1 && flag_on.flag_l != 1)
 		ft_print_ini(array);
 	if (flag_on.flag_l == 1)
 		ft_flag_l(array, location, flag_on);
@@ -36,9 +26,9 @@ void    ft_flag_print(char **array, char **location, t_options flag_on)
 		ft_flag_t_print(array, flag_on);
 }
 
-void    ft_print_line(char **array, t_options flag_on, char **location)
+void			ft_print_line(char **array, t_options flag_on, char **location)
 {
-    int			a;
+	int			a;
 	int			b;
 	static int	c;
 
@@ -50,9 +40,11 @@ void    ft_print_line(char **array, t_options flag_on, char **location)
 		ft_print_ini(array);
 	if (array[a] != NULL && flag_on.flag_ini == 1)
 		ft_flag_print(array, location, flag_on);
+	if (array[a] == NULL)
+		return ;
 }
 
-void    ft_ini(char **array, char **location, t_options flag_on, int a)
+void			ft_ini(char **array, char **location, t_options flag_on, int a)
 {
 	if (location == NULL)
 	{
@@ -68,7 +60,7 @@ void    ft_ini(char **array, char **location, t_options flag_on, int a)
 	}
 }
 
-t_options	ft_flag_ini(t_options flag_on, char *flags)
+t_options		ft_flag_ini(t_options flag_on, char *flags)
 {
 	if (ft_strchr(flags, 'a'))
 		flag_on.flag_a = 1;
@@ -84,7 +76,7 @@ t_options	ft_flag_ini(t_options flag_on, char *flags)
 	return (flag_on);
 }
 
-void	ft_check_flags(char **array, char *flags, char **location, t_options flag_on)
+void			ft_check_flags(char **array, char *flags, char **location, t_options flag_on)
 {
 	int		a;
 

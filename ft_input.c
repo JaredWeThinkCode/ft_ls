@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_input.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/08/02 11:41:51 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/08/02 12:00:29 by jnaidoo          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-char    **ft_find_dir(char **av)
+char	**ft_find_dir(char **av)
 {
 	char	**dir;
 	int		a;
@@ -12,8 +24,8 @@ char    **ft_find_dir(char **av)
 	dir[0] = ".";
 	while (av[a] != NULL)
 	{
-        if (av[a][0] != '-')
-            dir[b++] = ft_strdup(av[a]);
+		if (av[a][0] != '-')
+			dir[b++] = ft_strdup(av[a]);
 		a++;
 	}
 	return (dir);
