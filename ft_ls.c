@@ -5,91 +5,108 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/11 09:02:19 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/02 13:39:19 by jnaidoo          ###   ########.fr       */
+/*   Created: 2019/07/31 10:05:45 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/08/16 13:54:58 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void			ft_check_errno(char *location)
+void	ft_check_errno(char *location)
 {
-	if (errno == 20)
-		ft_printf("%s\n", location);
-	if (errno == 2)
-		ft_printf("ft_ls: %s: No such file or directory\n", location);
-	if (errno == 13)
-		ft_printf("ft_ls: %s: Permission denied\n", location);
-	exit(3);
+	ft_putstr("ft_ls: ");
+	perror(location);
 }
 
-char			**ft_readdir(char **array, char *location)
+void	ft_init(char **array, char **location, t_options flags, int a)
+{
+	if (a == -1)
+	{
+		location[0] = ft_strdup(".");
+		location[1] = NULL;
+		a = 0;
+	}
+	array = ft_readdir(array, location[a], flags);
+	array = ft_flags_init(array, location, flags, a);
+	ft_print_data(array, location);
+	if (location[a + 1] != NULL && array[0] != NULL)
+		ft_free_array(array, (ft_count_array(array) - 1));
+}
+
+char	**ft_readdir(char **array, char *location, t_options flags)
 {
 	struct dirent	*file;
 	DIR				*loc;
 	int				a;
 
 	a = 0;
-	if (location == NULL)
-		location = ft_strdup(".");
-	location = ft_strjoin(location, "/");
 	loc = opendir(location);
-	if (loc == NULL)
-	{
-		ft_check_errno(location);
-		//array[a] = NULL;
-		return (array);
-	}
 	while (loc != NULL && (file = readdir(loc)) != NULL)
 	{
-		array[a] = ft_strdup(file->d_name);
-		a++;
+		if (flags.flag_a == '1')
+			array[a++] = ft_strdup(file->d_name);
+		else
+		{
+			if (file->d_name[0] != '.')
+				array[a++] = ft_strdup(file->d_name);
+		}
 	}
 	closedir(loc);
 	array[a] = NULL;
-	ft_sort(array, ft_count_array(array));
+	if (a != 0 && a != 1)
+		ft_sort_lex(array, ft_count_array(array));
 	return (array);
 }
 
-t_options		ft_flag(t_options flag_on)
+void	ft_print_data(char **array, char **location)
 {
-	flag_on.flag_a = 0;
-	flag_on.flag_lr = 0;
-	flag_on.flag_t = 0;
-	flag_on.flag_l = 0;
-	flag_on.flag_ur = 0;
-	flag_on.flag_ini = 0;
-	return (flag_on);
+	int			a;
+	static int	b;
+	DIR			*loc;
+
+	a = 0;
+	if (!(loc = opendir(location[b])))
+		ft_check_errno(location[b++]);
+	else
+	{
+		if (ft_count_array(location) > 1)
+		{
+			ft_putstr(location[b++]);
+			ft_putendl(":");
+		}
+	}
+	closedir(loc);
+	while (array[a] != NULL)
+		ft_putendl(array[a++]);
+	if (location[b] != NULL && location[1] != NULL)
+		ft_putchar('\n');
 }
 
-int				main(int ac, char **av)
+int		main(int ac, char **av)
 {
 	char		**array;
 	char		**location;
-	char		*flags;
+	char		**flags_str;
+	t_options	flags;
 	int			a;
-	t_options	flag_on;
 
-	array = (char **)malloc(sizeof(char *) * 1024);
-	flag_on.flag_ini = 0;
-	flag_on = ft_flag(flag_on);
+	array = malloc(sizeof(array) * MALLOC_SIZE);
+	location = malloc(sizeof(location) * MALLOC_SIZE);
+	flags_str = malloc(sizeof(flags_str) * MALLOC_SIZE);
+	flags = ft_flag();
 	a = 0;
 	if (ac == 1)
-		ft_ini(array, NULL, flag_on, 0);
+		ft_init(array, location, flags, -1);
 	if (ac > 1)
 	{
-		flags = ft_cat_av(av);
-		location = ft_find_dir(av);
-		if (flags[0] == '-')
-			ft_check_flags(array, flags, location, flag_on);
-		else
-		{
-			while (location[a] != NULL)
-			{
-				ft_ini(array, location, flag_on, a);
-				a++;
-			}
-		}
+		flags_str = ft_find_flags(flags_str, av);
+		flags = ft_check_flags(flags_str, flags);
+		location = ft_find_dir(location, av, flags);
+		while (location[a] != NULL)
+			ft_init(array, location, flags, a++);
 	}
+	ft_free_array(array, -1);
+	ft_free_array(location, -1);
+	ft_free_array(flags_str, -1);
 	return (0);
 }

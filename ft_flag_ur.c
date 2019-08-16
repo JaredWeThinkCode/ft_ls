@@ -5,82 +5,72 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/31 12:21:23 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/02 13:38:31 by jnaidoo          ###   ########.fr       */
+/*   Created: 2019/08/16 09:41:39 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/08/16 13:50:10 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	ft_print_ini(char **array)
-{
-	int		a;
-
-	a = 0;
-	if (array[2] == NULL)
-		return ;
-	else
-		while (array[a] != NULL)
-			(array[a][0] != '.') ? ft_printf("%s\n", array[a++]) : a++;
-}
-
-char	**ft_arraydup(char **array)
+char	**ft_location(char **location, char *str, int a)
 {
 	char	**temp;
-	int		a;
+	int		b;
+	int		c;
 
-	temp = (char **)malloc(sizeof(char *) * 1024);
-	a = 0;
-	while (array[a] != NULL)
+	b = 0;
+	c = a + 1;
+	temp = malloc(sizeof(temp) * 256);
+	while (location[c] != NULL)
 	{
-		temp[a] = ft_strdup(array[a]);
-		a++;
+		temp[b] = ft_strdup(location[c]);
+		free(location[c]);
+		b++;
+		c++;
 	}
-	temp[a] = NULL;
-	return (temp);
+	temp[b] = NULL;
+	ft_location_join(location, temp, str, a);
+	ft_free_array(temp, -1);
+	return (location);
 }
 
-char	**ft_rec_loc(char *string, char **location)
+void	ft_location_join(char **location, char **temp, char *str, int a)
 {
 	int		b;
+	int		c;
 
-	b = ft_count_array(location);
-	location[b] = ft_strdup(string);
-	location[b + 1] = NULL;
-	return (location);
+	b = 0;
+	c = a + 2;
+	location[a + 1] = ft_strdup(str);
+	while (temp[b] != NULL)
+	{
+		location[c] = ft_strdup(temp[b]);
+		c++;
+		b++;
+	}
+	location[c] = NULL;
 }
 
-char	**ft_flag_ur(char **array, char **location, t_options flag_on)
+void	ft_recursive(char **array, char **location, int a)
 {
-	struct stat filestat;
-	char		*string;
-	int			a;
+	struct stat	filestat;
+	char		**temp;
 	int			b;
+	int			c;
 
-	a = 0;
-	while (location[a] != NULL)// && a < 2)
+	b = 0;
+	c = a;
+	temp = malloc(sizeof(temp) * MALLOC_SIZE);
+	while (array[b] != NULL)
 	{
-		b = 0;
-		array = ft_readdir(array, location[a]);
-		while (array[b] != NULL)
-		{
-			if (array[2] == NULL)
-				break ;
-			if (flag_on.flag_a != 1)
-				while (array[b][0] == '.')
-					b++;
-			string = ft_strdup(array[b]);
-			if (!(ft_strcmp(string, ".") == 0 || ft_strcmp(string, "..") == 0))
-			{
-				string = ft_strjoin(ft_strjoin(location[a], "/"), string);
-				lstat(string, &filestat);
-				if (S_ISDIR(filestat.st_mode) || S_ISLNK(filestat.st_mode))
-					location = ft_rec_loc(string, location);
-			}
-			b++;
-		}
-		a++;
+		temp[0] = ft_strjoin(location[a], "/");
+		temp[1] = ft_strjoin(temp[0], array[b]);
+		lstat(temp[1], &filestat);
+		if (!(S_ISLNK(filestat.st_mode)))
+			if (S_ISDIR(filestat.st_mode) && (ft_strcmp(array[b], ".") != 0) && (ft_strcmp(array[b], "..") != 0))
+				location = ft_location(location, temp[1], c++);
+		ft_free_array(temp, 1);
+		b++;
 	}
-	ft_sort(location, ft_count_array(location));
-	return (location);
+	free(temp);
 }

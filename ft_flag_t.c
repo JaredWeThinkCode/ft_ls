@@ -5,96 +5,98 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/31 11:54:29 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/02 11:44:55 by jnaidoo          ###   ########.fr       */
+/*   Created: 2019/08/16 09:37:15 by jnaidoo           #+#    #+#             */
+/*   Updated: 2019/08/16 10:20:39 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char	**ft_rev_array(char **array)
+void	ft_sort_lex(char **array, int size)
 {
+	char	*sort;
 	int		a;
 	int		b;
-	char	**temp;
-
-	a = 0;
-	b = ft_count_array(array) - 1;
-	temp = (char **)malloc(sizeof(char *) * 1024);
-	while (b >= 0)
-		temp[a++] = ft_strdup(array[b--]);
-	temp[a] = NULL;
-	return (temp);
-}
-
-char	**ft_remove_num(char **array)
-{
-	int		a;
-	int		b;
-	char	**temp;
-
-	a = 0;
-	temp = (char **)malloc(sizeof(char *) * 1024);
-	while (array[a] != NULL)
-	{
-		b = 0;
-		while (array[a][b] >= '0' && array[a][b] <= '9')
-			b++;
-		temp[a] = ft_strdup(array[a] + b);
-		a++;
-	}
-	temp[a] = NULL;
-	return (temp);
-}
-
-char	**ft_flag_t(char **array, char *location)
-{
-	struct stat filestat;
-	int			a;
-	int			b;
-	char		**temp;
-	char		*string;
 
 	a = 0;
 	b = 0;
-	temp = (char **)malloc(sizeof(char *) * 1024);
-	string = malloc(sizeof(char *) * 1024);
-	while (array[a] != NULL)
+	while (a < size)
 	{
-		location = ft_strjoin(location, "/");
-		string = ft_strdup(array[a]);
-		string = ft_strjoin(location, string);
-		lstat(string, &filestat);
-		b = filestat.st_mtime;
-		temp[a] = ft_itoa(b);
-		b = filestat.st_mtimespec.tv_nsec;
-		temp[a] = ft_strjoin(temp[a], ft_itoa(b));
-		temp[a] = ft_strjoin(temp[a], array[a]);
+		b = a + 1;
+		while (b < size)
+		{
+			if ((ft_strcmp(array[a], array[b])) > 0)
+			{
+				sort = ft_strdup(array[a]);
+				free(array[a]);
+				array[a] = ft_strdup(array[b]);
+				free(array[b]);
+				array[b] = ft_strdup(sort);
+				free(sort);
+			}
+			b++;
+		}
 		a++;
 	}
-	ft_sort(temp, ft_count_array(temp));
-	temp = ft_remove_num(temp);
-	temp = ft_rev_array(temp);
-	return (temp);
 }
 
-void	ft_flag_t_print(char **array, t_options flag_on)
+void	ft_time_1(char **sort, char **array, int a, int b)
+{
+	struct stat	filestat1;
+	struct stat	filestat2;
+
+	sort[1] = ft_strjoin(sort[0], array[a]);
+	sort[2] = ft_strjoin(sort[0], array[b]);
+	stat(sort[1], &filestat1);
+	stat(sort[2], &filestat2);
+	sort[3] = ft_itoa(filestat1.st_mtime);
+	sort[4] = ft_itoa(filestat2.st_mtime);
+	sort[5] = ft_itoa(filestat1.st_mtimespec.tv_nsec);
+	sort[6] = ft_itoa(filestat2.st_mtimespec.tv_nsec);
+}
+
+void	ft_time_2(char **sort, char **array, int a, int b)
+{
+	sort[7] = ft_strdup(array[a]);
+	free(array[a]);
+	array[a] = ft_strdup(array[b]);
+	free(array[b]);
+	array[b] = ft_strdup(sort[7]);
+	free(sort[7]);
+}
+
+void	ft_time_3(char **sort, char **array, int a, int b)
+{
+	if ((ft_strcmp(sort[5], sort[6])) < 0)
+		ft_time_2(sort, array, a, b);
+	if ((ft_strcmp(sort[5], sort[6])) == 0)
+		if ((ft_strcmp(array[a], array[b])) > 0)
+			ft_time_2(sort, array, a, b);
+}
+
+void	ft_sort_time(char **array, char *location)
 {
 	int		a;
+	int		b;
+	char	**sort;
 
 	a = 0;
-	if (flag_on.flag_lr == 1)
+	sort = malloc(sizeof(sort) * MALLOC_SIZE);
+	while (array[a] != NULL)
 	{
-		a = ft_count_array(array) - 1;
-		if (flag_on.flag_a != 1)
-			while (a >= 0)
-				(array[a][0] != '.') ? ft_printf("%s\n", array[a--]) : a--;
-		if (flag_on.flag_a == 1)
-			ft_flag_lr(array, flag_on);
+		b = a + 1;
+		while (array[b] != NULL)
+		{
+			sort[0] = ft_strjoin(location, "/");
+			ft_time_1(sort, array, a, b);
+			if ((ft_strcmp(sort[3], sort[4])) < 0)
+				ft_time_2(sort, array, a, b);
+			if ((ft_strcmp(sort[3], sort[4])) == 0)
+				ft_time_3(sort, array, a, b);
+			ft_free_array(sort, 6);
+			b++;
+		}
+		a++;
 	}
-	else if (flag_on.flag_a == 1)
-		ft_flag_a(array, 0);
-	else
-		while (array[a] != NULL)
-			(array[a][0] == '.') ? a++ : ft_printf("%s\n", array[a++]);
+	free(sort);
 }
