@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:27:51 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/16 13:46:49 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/26 16:23:09 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_options	ft_flag(void)
 	flags.flag_t = '0';
 	flags.flag_l = '0';
 	flags.flag_ur = '0';
+	flags.flag_err = '0';
 	return (flags);
 }
 
@@ -35,6 +36,23 @@ char		**ft_flags_init(char **array, char **loc, t_options flags, int a)
 	if (flags.flag_l == '1')
 		array = ft_flag_l(array, loc[a]);
 	return (array);
+}
+
+int			ft_options(char **flags_str)
+{
+	int		a;
+	int		b;
+	int		c;
+
+	a = 0;
+	b = 0;
+	c = 0;
+	while (flags_str[a] != NULL)
+	{
+
+		a++;
+	}
+	return (c);
 }
 
 t_options	ft_check_flags(char **flags_str, t_options flags)

@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/16 13:58:13 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/26 16:07:15 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <sys/xattr.h>
 # include <grp.h>
 
-# define MALLOC_SIZE 1024
+# define MALLOC_SIZE 256
 
 typedef struct	s_options
 {
@@ -32,7 +32,7 @@ typedef struct	s_options
 	char		flag_l;
 	char		flag_lr;
 	char		flag_ur;
-	char		flag_ini;
+	char		flag_err;
 }				t_options;
 
 int				ft_count_array(char **array);
@@ -55,12 +55,12 @@ void			ft_time_2(char **sort, char **array, int a, int b);
 void			ft_time_3(char **sort, char **array, int a, int b);
 void			ft_init(char **array, char **location, t_options flags, int a);
 void			ft_cal_block(char **array, int num);
-void			ft_flagl_pm2(char **temp, struct stat filestat);
+void			ft_flagl_pm2(char **temp, struct stat filestat, char *location);
 void			ft_free_array(char **array, int num);
 void			ft_init(char **array, char **location, t_options flags, int a);
-void			ft_print_data(char **array, char **location);
+void			ft_print_data(char **array, char **location, t_options flags);
 void			ft_sort_lex(char **array, int size);
-void			ft_check_errno(char *location);
+void			ft_check_errno(char **array, char *location, t_options flags);
 
 t_options		ft_flag(void);
 t_options		ft_check_flags(char **flags_str, t_options flags);

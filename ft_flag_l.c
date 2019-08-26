@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:29:49 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/16 13:43:43 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/26 15:34:53 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,34 +40,38 @@ char	*ft_add_space(char *temp, int pos, int size)
 
 char	*ft_flagl_pm1(char *temp4, struct stat filestat)
 {
-	char	*temp;
+	char	temp[11];
 
-	temp = malloc(MALLOC_SIZE);
-	if (S_ISLNK(filestat.st_mode))
-		temp[0] = 'l';
-	else if (S_ISDIR(filestat.st_mode))
-		temp[0] = 'd';
+	if (!(S_ISDIR(filestat.st_mode)))
+		temp[0] = (S_ISLNK(filestat.st_mode)) ? 'l' : '-';
 	else
-		temp[0] = '-';
+		temp[0] = (S_ISDIR(filestat.st_mode)) ? 'd' : '-';
 	temp[1] = (filestat.st_mode & S_IRUSR) ? 'r' : '-';
 	temp[2] = (filestat.st_mode & S_IWUSR) ? 'w' : '-';
 	temp[3] = (filestat.st_mode & S_IXUSR) ? 'x' : '-';
+	if (filestat.st_mode & S_ISUID)
+		temp[3] = (temp[3] == 'x') ? 's' : 'S';
 	temp[4] = (filestat.st_mode & S_IRGRP) ? 'r' : '-';
 	temp[5] = (filestat.st_mode & S_IWGRP) ? 'w' : '-';
 	temp[6] = (filestat.st_mode & S_IXGRP) ? 'x' : '-';
+	if (filestat.st_mode & S_ISGID)
+		temp[6] = (temp[6] == 'x') ? 's' : 'S';
 	temp[7] = (filestat.st_mode & S_IROTH) ? 'r' : '-';
 	temp[8] = (filestat.st_mode & S_IWOTH) ? 'w' : '-';
 	temp[9] = (filestat.st_mode & S_IXOTH) ? 'x' : '-';
+	if (filestat.st_mode & S_ISVTX)
+		temp[9] = (temp[9] == 'x') ? 't' : 'T';
 	temp[10] = '\0';
 	temp4 = ft_strdup(temp);
-	free(temp);
 	return (temp4);
 }
 
-void	ft_flagl_pm2(char **temp, struct stat filestat)
+void	ft_flagl_pm2(char **temp, struct stat filestat, char *location)
 {
 	struct passwd	*pw;
 	struct group	*gp;
+	char			str[100];
+	int				a;
 
 	pw = getpwuid(filestat.st_uid);
 	gp = getgrgid(filestat.st_gid);
@@ -75,17 +79,16 @@ void	ft_flagl_pm2(char **temp, struct stat filestat)
 	temp[4] = ft_flagl_pm1(temp[4], filestat);
 	temp[5] = ft_itoa((int)filestat.st_nlink);
 	temp[6] = ft_itoa((int)filestat.st_size);
-	if (pw != 0)
+	temp[7] = (pw != 0) ? ft_strdup(pw->pw_name) : ft_itoa(filestat.st_uid);
+	temp[8] = (pw != 0) ? ft_strdup(gp->gr_name) : ft_itoa(filestat.st_gid);
+	if (S_ISLNK(filestat.st_mode))
 	{
-		temp[7] = ft_strdup(pw->pw_name);
-		temp[8] = ft_strdup(gp->gr_name);
+		a = readlink(location, str, 100);
+		str[a] = '\0';
+		temp[9] = ft_strjoin(ft_strjoin(temp[0], " -> "), ft_strdup(str));
 	}
 	else
-	{
-		temp[7] = ft_itoa(filestat.st_uid);
-		temp[8] = ft_itoa(filestat.st_gid);
-	}
-	temp[9] = ft_strdup(temp[0]);
+		temp[9] = ft_strdup(temp[0]);
 }
 
 char	*ft_temp_join(char **temp)
@@ -128,12 +131,13 @@ char	**ft_flag_l(char **array, char *location)
 		temp[2] = ft_strjoin(temp[1], temp[0]);
 		lstat(temp[2], &filestat);
 		b += filestat.st_blocks;
-		ft_flagl_pm2(temp, filestat);
+		ft_flagl_pm2(temp, filestat, temp[2]);
 		free(array[a]);
 		array[a++] = ft_temp_join(temp);
 		ft_free_array(temp, 9);
 	}
 	free(temp);
-	ft_cal_block(array, b);
+	if (a != 0 && a != 1)
+		ft_cal_block(array, b);
 	return (array);
 }

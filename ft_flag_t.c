@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:37:15 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/16 10:20:39 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/26 12:18:43 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	ft_time_1(char **sort, char **array, int a, int b)
 	sort[2] = ft_strjoin(sort[0], array[b]);
 	stat(sort[1], &filestat1);
 	stat(sort[2], &filestat2);
-	sort[3] = ft_itoa(filestat1.st_mtime);
-	sort[4] = ft_itoa(filestat2.st_mtime);
+	sort[3] = ft_itoa(filestat1.st_mtimespec.tv_sec);
+	sort[4] = ft_itoa(filestat2.st_mtimespec.tv_sec);
 	sort[5] = ft_itoa(filestat1.st_mtimespec.tv_nsec);
 	sort[6] = ft_itoa(filestat2.st_mtimespec.tv_nsec);
 }

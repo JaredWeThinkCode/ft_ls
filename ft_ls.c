@@ -6,16 +6,26 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 10:05:45 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/16 13:54:58 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/26 16:10:10 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	ft_check_errno(char *location)
+void	ft_check_errno(char **array, char *location, t_options flags)
 {
-	ft_putstr("ft_ls: ");
-	perror(location);
+	if (errno == 20)
+	{
+		array[0] = ft_strdup(location);
+		array[1] = NULL;
+		if (flags.flag_l == '1')
+			array = ft_flag_l(array, ".");
+	}
+	else
+	{
+		ft_putstr("ft_ls: ");
+		perror(location);
+	}
 }
 
 void	ft_init(char **array, char **location, t_options flags, int a)
@@ -28,7 +38,7 @@ void	ft_init(char **array, char **location, t_options flags, int a)
 	}
 	array = ft_readdir(array, location[a], flags);
 	array = ft_flags_init(array, location, flags, a);
-	ft_print_data(array, location);
+	ft_print_data(array, location, flags);
 	if (location[a + 1] != NULL && array[0] != NULL)
 		ft_free_array(array, (ft_count_array(array) - 1));
 }
@@ -51,14 +61,15 @@ char	**ft_readdir(char **array, char *location, t_options flags)
 				array[a++] = ft_strdup(file->d_name);
 		}
 	}
-	closedir(loc);
+	if (loc)
+		closedir(loc);
 	array[a] = NULL;
 	if (a != 0 && a != 1)
 		ft_sort_lex(array, ft_count_array(array));
 	return (array);
 }
 
-void	ft_print_data(char **array, char **location)
+void	ft_print_data(char **array, char **location, t_options flags)
 {
 	int			a;
 	static int	b;
@@ -66,7 +77,7 @@ void	ft_print_data(char **array, char **location)
 
 	a = 0;
 	if (!(loc = opendir(location[b])))
-		ft_check_errno(location[b++]);
+		ft_check_errno(array, location[b++], flags);
 	else
 	{
 		if (ft_count_array(location) > 1)
@@ -75,7 +86,8 @@ void	ft_print_data(char **array, char **location)
 			ft_putendl(":");
 		}
 	}
-	closedir(loc);
+	if (loc)
+		closedir(loc);
 	while (array[a] != NULL)
 		ft_putendl(array[a++]);
 	if (location[b] != NULL && location[1] != NULL)
@@ -102,7 +114,7 @@ int		main(int ac, char **av)
 		flags_str = ft_find_flags(flags_str, av);
 		flags = ft_check_flags(flags_str, flags);
 		location = ft_find_dir(location, av, flags);
-		while (location[a] != NULL)
+		while (location[a] != NULL && flags.flag_err == '0')
 			ft_init(array, location, flags, a++);
 	}
 	ft_free_array(array, -1);
