@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 09:01:41 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/26 16:07:15 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/27 16:00:26 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct	s_options
 	char		flag_l;
 	char		flag_lr;
 	char		flag_ur;
+	char		flag_f;
 	char		flag_err;
 }				t_options;
 

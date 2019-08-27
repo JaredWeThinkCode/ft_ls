@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:43:34 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/26 08:33:57 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/27 12:07:05 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ void	ft_free_array(char **array, int num)
 
 	a = 0;
 	if (num != -1)
-		while (a <= num)
-			free(array[a++]);
+		while (array[a] != NULL && a <= num)
+			ft_strdel(&array[a++]);
 	if (num == -1)
 	{
 		while (array[a] != NULL)
-			free(array[a++]);
+			ft_strdel(&array[a++]);
 		free(array);
 	}
 }

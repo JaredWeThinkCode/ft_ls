@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:29:49 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/26 15:34:53 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/27 11:39:26 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,10 @@ void	ft_flagl_pm2(char **temp, struct stat filestat, char *location)
 	struct passwd	*pw;
 	struct group	*gp;
 	char			str[100];
+	char			*str1;
 	int				a;
 
+	str1 = ft_strjoin(temp[0], " -> ");
 	pw = getpwuid(filestat.st_uid);
 	gp = getgrgid(filestat.st_gid);
 	temp[3] = ft_strsub(ctime(&filestat.st_mtime), 4, 12);
@@ -85,10 +87,11 @@ void	ft_flagl_pm2(char **temp, struct stat filestat, char *location)
 	{
 		a = readlink(location, str, 100);
 		str[a] = '\0';
-		temp[9] = ft_strjoin(ft_strjoin(temp[0], " -> "), ft_strdup(str));
+		temp[9] = ft_strjoin(str1, str);
 	}
 	else
 		temp[9] = ft_strdup(temp[0]);
+	free(str1);
 }
 
 char	*ft_temp_join(char **temp)

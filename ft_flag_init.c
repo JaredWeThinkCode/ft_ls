@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:27:51 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/26 16:23:09 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/27 15:31:41 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_options	ft_flag(void)
 	flags.flag_t = '0';
 	flags.flag_l = '0';
 	flags.flag_ur = '0';
+	flags.flag_f = '0';
 	flags.flag_err = '0';
 	return (flags);
 }
@@ -42,17 +43,28 @@ int			ft_options(char **flags_str)
 {
 	int		a;
 	int		b;
-	int		c;
+	char	*str;
 
 	a = 0;
-	b = 0;
-	c = 0;
+	str = "bcdeghijkmnopqsuvwxyzABCDEFGHIJKLMNOPQSTUVWXYZ";
 	while (flags_str[a] != NULL)
 	{
-
+		b = 0;
+		while (str[b] != '\0')
+		{
+			if (ft_strchr(flags_str[a], str[b]))
+			{
+				ft_putstr("ft_ls : illegal option -- ");
+				ft_putchar(str[b]);
+				ft_putchar('\n');
+				ft_putendl("usage: ft_ls [Ralrt] [file ...]");
+				return (1);
+			}
+			b++;
+		}
 		a++;
 	}
-	return (c);
+	return (0);
 }
 
 t_options	ft_check_flags(char **flags_str, t_options flags)
@@ -72,7 +84,11 @@ t_options	ft_check_flags(char **flags_str, t_options flags)
 			flags.flag_l = '1';
 		if (ft_strchr(flags_str[a], 'R'))
 			flags.flag_ur = '1';
+		if (ft_strchr(flags_str[a], 'f'))
+			flags.flag_f = '1';
 		a++;
 	}
+	if ((ft_options(flags_str)) == 1)
+		flags.flag_err = '1';
 	return (flags);
 }
