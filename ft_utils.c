@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:43:34 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/27 12:07:05 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/28 13:52:12 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	**ft_find_flags(char **flags_str, char **av)
 	return (flags_str);
 }
 
-char	**ft_find_dir(char **location, char **av, t_options flags)
+char	**ft_find_dir(char **location, char **av, t_options *flags)
 {
 	int		a;
 	int		b;
@@ -77,7 +77,7 @@ char	**ft_find_dir(char **location, char **av, t_options flags)
 	b = 0;
 	while (av[a] != NULL)
 	{
-		if (av[a][0] != '-')
+		if (av[a][0] != '-' || (ft_strcmp("-", av[a]) == 0))
 			location[b++] = ft_strdup(av[a]);
 		a++;
 	}
@@ -85,7 +85,7 @@ char	**ft_find_dir(char **location, char **av, t_options flags)
 		location[b++] = ft_strdup(".");
 	location[b] = NULL;
 	ft_sort_lex(location, ft_count_array(location));
-	if (flags.flag_lr == '1' && flags.flag_ur == '0' && location[1] != NULL)
+	if (flags->flag_lr == '1' && flags->flag_ur == '0' && location[1] != NULL)
 		location = ft_rev_array(location);
 	return (location);
 }

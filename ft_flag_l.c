@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:29:49 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/27 11:39:26 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/28 14:30:23 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,27 +66,27 @@ char	*ft_flagl_pm1(char *temp4, struct stat filestat)
 	return (temp4);
 }
 
-void	ft_flagl_pm2(char **temp, struct stat filestat, char *location)
+void	ft_flagl_pm2(char **temp, struct stat file, char *loc, t_options *flag)
 {
 	struct passwd	*pw;
 	struct group	*gp;
 	char			str[100];
 	char			*str1;
-	int				a;
 
 	str1 = ft_strjoin(temp[0], " -> ");
-	pw = getpwuid(filestat.st_uid);
-	gp = getgrgid(filestat.st_gid);
-	temp[3] = ft_strsub(ctime(&filestat.st_mtime), 4, 12);
-	temp[4] = ft_flagl_pm1(temp[4], filestat);
-	temp[5] = ft_itoa((int)filestat.st_nlink);
-	temp[6] = ft_itoa((int)filestat.st_size);
-	temp[7] = (pw != 0) ? ft_strdup(pw->pw_name) : ft_itoa(filestat.st_uid);
-	temp[8] = (pw != 0) ? ft_strdup(gp->gr_name) : ft_itoa(filestat.st_gid);
-	if (S_ISLNK(filestat.st_mode))
+	pw = getpwuid(file.st_uid);
+	gp = getgrgid(file.st_gid);
+	temp[3] = ft_strsub(ctime(&file.st_mtime), 4, 12);
+	temp[4] = ft_flagl_pm1(temp[4], file);
+	temp[5] = ft_itoa((int)file.st_nlink);
+	temp[6] = ft_itoa((int)file.st_size);
+	temp[7] = (pw != 0 && flag->flag_n == '0') ?
+		ft_strdup(pw->pw_name) : ft_itoa(file.st_uid);
+	temp[8] = (pw != 0 && flag->flag_n == '0') ?
+		ft_strdup(gp->gr_name) : ft_itoa(file.st_gid);
+	if (S_ISLNK(file.st_mode))
 	{
-		a = readlink(location, str, 100);
-		str[a] = '\0';
+		str[readlink(loc, str, 100)] = '\0';
 		temp[9] = ft_strjoin(str1, str);
 	}
 	else
@@ -117,7 +117,7 @@ char	*ft_temp_join(char **temp)
 	return (array);
 }
 
-char	**ft_flag_l(char **array, char *location)
+char	**ft_flag_l(char **array, char *location, t_options *flags)
 {
 	struct stat	filestat;
 	char		**temp;
@@ -134,7 +134,7 @@ char	**ft_flag_l(char **array, char *location)
 		temp[2] = ft_strjoin(temp[1], temp[0]);
 		lstat(temp[2], &filestat);
 		b += filestat.st_blocks;
-		ft_flagl_pm2(temp, filestat, temp[2]);
+		ft_flagl_pm2(temp, filestat, temp[2], flags);
 		free(array[a]);
 		array[a++] = ft_temp_join(temp);
 		ft_free_array(temp, 9);

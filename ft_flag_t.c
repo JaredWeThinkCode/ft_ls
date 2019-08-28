@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:37:15 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/27 15:52:26 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/28 12:47:46 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,10 @@ void	ft_time_3(char **sort, char **array, int a, int b)
 	if ((ft_strcmp(sort[5], sort[6])) < 0)
 		ft_time_2(sort, array, a, b);
 	else
+	{
 		if ((ft_strcmp(array[a], array[b])) >= 0)
 			ft_time_2(sort, array, a, b);
+	}
 }
 
 void	ft_sort_time(char **array, char *location)
