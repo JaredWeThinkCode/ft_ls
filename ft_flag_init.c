@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:27:51 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/28 14:06:09 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/29 11:33:38 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_options	ft_flag(void)
 {
 	t_options	flags;
 
-	flags.malloc = 256;
+	flags.malloc = MALLOC_SIZE;
 	flags.flag_a = '0';
 	flags.flag_lr = '0';
 	flags.flag_t = '0';

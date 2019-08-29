@@ -6,7 +6,7 @@
 #    By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/31 15:13:34 by jnaidoo           #+#    #+#              #
-#    Updated: 2019/06/28 15:30:28 by jnaidoo          ###   ########.fr        #
+#    Updated: 2019/08/29 12:04:08 by jnaidoo          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,10 +39,10 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	ar rv $(NAME) $(OBJ) $(INCL)
 	ranlib $(NAME)
-	gcc -g -o $(PROG) $(NAME)
+	gcc -o $(PROG) $(NAME)
 
 %.o: %.c
-	gcc -g -c $(TEST) -o $@ $<
+	gcc -c $(TEST) -o $@ $<
 
 norm:
 	norminette

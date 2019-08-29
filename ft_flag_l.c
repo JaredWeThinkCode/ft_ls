@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:29:49 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/28 14:30:23 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/29 10:34:22 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ char	*ft_temp_join(char **temp)
 	char	*array;
 
 	tab = malloc(sizeof(tab) * MALLOC_SIZE);
-	tab[0] = ft_add_space(temp[5], 0, 4);
-	tab[1] = ft_add_space(temp[7], 1, 6);
-	tab[2] = ft_add_space(temp[8], 1, 6);
+	tab[0] = ft_add_space(temp[5], 0, 5);
+	tab[1] = ft_add_space(temp[7], 1, 8);
+	tab[2] = ft_add_space(temp[8], 1, 11);
 	tab[3] = ft_add_space(temp[6], 0, 6);
 	tab[4] = ft_add_space(temp[3], 1, 12);
 	tab[5] = ft_strjoin(temp[4], tab[0]);

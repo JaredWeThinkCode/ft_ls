@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/31 10:05:45 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/28 14:52:20 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/29 12:01:04 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,5 @@ int		main(int ac, char **av)
 	ft_free_array(array, -1);
 	ft_free_array(loc, -1);
 	ft_free_array(flags_str, -1);
-	sleep(100);
 	return (0);
 }
