@@ -6,7 +6,7 @@
 /*   By: jnaidoo <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 09:27:51 by jnaidoo           #+#    #+#             */
-/*   Updated: 2019/08/29 11:33:38 by jnaidoo          ###   ########.fr       */
+/*   Updated: 2019/08/30 12:47:34 by jnaidoo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ t_options	ft_flag(void)
 
 char		**ft_flags_init(char **array, char **loc, t_options *flags, int a)
 {
-	if (flags->flag_ur == '1')
-		ft_recursive(array, loc, a);
 	if (flags->flag_t == '1' && flags->flag_f == '0')
 		ft_sort_time(array, loc[a]);
 	if (flags->flag_lr == '1' && flags->flag_f == '0')
 		array = ft_rev_array(array);
+	if (flags->flag_ur == '1')
+		ft_recursive(array, loc, a);
 	if (flags->flag_l == '1' || flags->flag_n == '1')
 		array = ft_flag_l(array, loc[a], flags);
 	return (array);
